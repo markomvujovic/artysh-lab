@@ -27,7 +27,9 @@ jobs:
           node-version: 24
           cache: npm
 
-      - run: npm ci
+      # npm install umesto npm ci: lock fajl napravljen na macOS-u ne beleži opcione
+      # WebAssembly zavisnosti (@emnapi/*) za Linux, pa ih npm ci odbija (poznat npm bag)
+      - run: npm install --no-audit --no-fund
 
       - name: Build (statički export)
         run: npm run build
