@@ -4,11 +4,12 @@ import { visionTool } from "@sanity/vision";
 import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
 
+import { basePath } from "./src/lib/asset";
 import { apiVersion, dataset, projectId } from "./src/sanity/env";
 import { schemaTypes } from "./src/sanity/schemaTypes";
 
 export default defineConfig({
-  basePath: "/studio",
+  basePath: `${basePath}/studio`,
   projectId,
   dataset,
   schema: { types: schemaTypes },

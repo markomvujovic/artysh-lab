@@ -32,6 +32,22 @@ U Sanity projektu, pod **API → CORS origins**, treba dodati `http://localhost:
 | `npm run start` | Pokretanje produkcionog builda |
 | `npm run lint` | ESLint |
 
+## Deploy
+
+### GitHub Pages (privremeno, za pregled dizajna)
+
+Workflow `.github/workflows/deploy-pages.yml` na svaki push na `main` pravi statičku verziju sajta i objavljuje je.
+
+Jednom podesiti: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
+
+Lokalno isti build: `STATIC_EXPORT=true NEXT_PUBLIC_BASE_PATH=/artysh-lab npm run build` (rezultat u `out/`).
+
+Ograničenja statičke verzije: nema servera, pa kontakt forma ne može da šalje podatke, Sanity sadržaj se učitava samo pri buildu, a slike se ne optimizuju.
+
+### Vercel (produkcija)
+
+Povezati GitHub repo na [vercel.com](https://vercel.com) i dodati promenljive okruženja iz tabele iznad. Nisu potrebne izmene u kodu.
+
 ## Struktura
 
 ```
