@@ -1,0 +1,54 @@
+# Statička verzija sajta na GitHub Pages: https://<korisnik>.github.io/<repo>/
+# Podešavanje (jednom): Settings → Pages → Build and deployment → Source: "GitHub Actions"
+name: Deploy na GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build (statički export)
+        run: npm run build
+        env:
+          STATIC_EXPORT: "true"
+          # Sajt živi pod /<ime-repoa>/, npr. /artysh-lab
+          NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
+          # Javni podaci (završavaju u kodu za pregledač), nisu tajna
+          NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ vars.NEXT_PUBLIC_SANITY_PROJECT_ID || 'qt6ay7gx' }}
+          NEXT_PUBLIC_SANITY_DATASET: ${{ vars.NEXT_PUBLIC_SANITY_DATASET || 'production' }}
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,36 +1,74 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ArtyshLab — Moji prvi koncerti
 
-## Getting Started
+Sajt za interaktivne i edukativne koncerte za bebe, decu i njihove roditelje.
 
-First, run the development server:
+Napravljen sa **Next.js 16** (App Router, TypeScript), **Tailwind CSS v4** i **Sanity** (Studio ugrađen na `/studio`).
+
+## Pokretanje
 
 ```bash
+npm install
+cp .env.example .env.local   # pa upisati Sanity project ID
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Sajt: http://localhost:3000 · Sanity Studio: http://localhost:3000/studio
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Promenljive okruženja
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Promenljiva | Opis |
+| --- | --- |
+| `NEXT_PUBLIC_SANITY_PROJECT_ID` | ID projekta sa [sanity.io/manage](https://www.sanity.io/manage) |
+| `NEXT_PUBLIC_SANITY_DATASET` | Dataset, podrazumevano `production` |
 
-## Learn More
+U Sanity projektu, pod **API → CORS origins**, treba dodati `http://localhost:3000` (i produkcioni domen) sa uključenim **Allow credentials**.
 
-To learn more about Next.js, take a look at the following resources:
+## Skripte
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Komanda | Opis |
+| --- | --- |
+| `npm run dev` | Dev server |
+| `npm run build` | Produkcioni build |
+| `npm run start` | Pokretanje produkcionog builda |
+| `npm run lint` | ESLint |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Deploy
 
-## Deploy on Vercel
+### GitHub Pages (privremeno, za pregled dizajna)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Workflow `.github/workflows/deploy-pages.yml` na svaki push na `main` pravi statičku verziju sajta i objavljuje je.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Jednom podesiti: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
+
+Lokalno isti build: `STATIC_EXPORT=true NEXT_PUBLIC_BASE_PATH=/artysh-lab npm run build` (rezultat u `out/`).
+
+Ograničenja statičke verzije: nema servera, pa kontakt forma ne može da šalje podatke, Sanity sadržaj se učitava samo pri buildu, a slike se ne optimizuju.
+
+### Vercel (produkcija)
+
+Povezati GitHub repo na [vercel.com](https://vercel.com) i dodati promenljive okruženja iz tabele iznad. Nisu potrebne izmene u kodu.
+
+## Struktura
+
+```
+src/
+  app/
+    (site)/            stranice sajta (zajednički header i footer)
+      opcije/hero/     privremeno: poređenje opcija hero sekcije
+    studio/            ugrađeni Sanity Studio
+    globals.css        dizajn tokeni (boje, tipografija, razmaci)
+  components/
+    layout/            Header, Footer
+    sections/          sekcije početne strane
+    ui/                zajedničke komponente (Button, Container, ikonice…)
+  content/landing.ts   statički sadržaj početne strane (do prelaska na Sanity)
+  sanity/              Sanity klijent, pomoćne funkcije i šeme
+public/
+  icons/  images/  shapes/   asseti izvezeni iz Figme
+```
+
+## Dizajn
+
+Izvor dizajna je Figma fajl „ArtyshLab“. Svi tokeni su definisani u `src/app/globals.css` (`@theme`), a komponente koriste samo njih.
+
+SVG fajlovi izvezeni iz Figme optimizuju se sa `npx svgo -r public` (podešavanja u `svgo.config.mjs` čuvaju `viewBox`).

@@ -1,26 +1,61 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/*
+ * Dizajn tokeni (izvor: Figma "ArtyshLab", Desktop - 98).
+ * Komponente koriste samo ove vrednosti, bez hex boja u JSX-u.
+ */
+@theme {
+  /* Boje */
+  --color-ink: #000000;
+  --color-paper: #ffffff;
+  --color-pink: #ff3185;
+  --color-yellow: #f9ca55;
+  --color-yellow-light: #fde19c;
+  --color-star: #ecaf15;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  /* Font */
+  --font-sans: var(--font-comfortaa), ui-sans-serif, system-ui, sans-serif;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  /* Tipografija */
+  --text-display: clamp(3rem, 5.6vw, 5rem); /* 80px */
+  --text-display--line-height: 1.2; /* 96px */
+  --text-display--letter-spacing: -0.02em;
+  --text-h2: clamp(2.5rem, 4.75vw, 4.25rem); /* 68px */
+  --text-h2--line-height: 1.41; /* 96px */
+  --text-stat: clamp(2.5rem, 3.75vw, 3.375rem); /* 54px */
+  --text-stat--line-height: 1.11;
+  --text-lead: 1.5rem; /* 24px */
+  --text-lead--line-height: 1.125;
+  --text-base: 1rem; /* 16px */
+  --text-base--line-height: 1.375; /* 22px */
+
+  /* Razmaci */
+  --spacing-section: clamp(80px, 9.72vw, 140px); /* 140px na 1440 */
+  --spacing-heading: clamp(32px, 4.17vw, 60px); /* 60px na 1440 */
+
+  /* Širine sadržaja */
+  --container-content: 1128px;
+  --container-narrow: 936px;
+
+  /* Animacije */
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --animate-fade-in: fade-in 400ms ease-out;
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    overflow-x: clip;
+  }
 }
